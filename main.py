@@ -2,26 +2,32 @@ import pygame as pg
 import sys
 from setting import *
 from map import *
+from player import *
 
 class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode(RES)
         self.clock = pg.time.Clock()
+        #FPS依存対策用
+        self.delta_time = 1
         self.new_game()
 
     def new_game(self):
         self.map = Map(self)
+        self.player = Player(self)
 
     def update(self):
+        self.player.update()
         # 画面全体を更新
         pg.display.flip()
-        self.clock.tick(FPS)
+        self.delta_time = self.clock.tick(FPS)
         pg.display.set_caption(f'{self.clock.get_fps() :.1f} FPS')
 
     def draw(self):
         self.screen.fill('black')
         self.map.draw()
+        self.player.draw()
 
     def check_events(self):
         for event in pg.event.get():
