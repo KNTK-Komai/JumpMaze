@@ -1,8 +1,12 @@
 import pygame as pg
 import sys
+from npc import *
+from object_handler import *
+from raycasting import *
 from setting import *
 from map import *
 from player import *
+from pathfinding import *
 
 class Game:
     def __init__(self):
@@ -16,9 +20,14 @@ class Game:
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
+        self.raycasting = RayCasting(self)
+        self.object_handler = ObjectHandler(self)
+        self.pathfinding = Pathfinding(self)
 
     def update(self):
         self.player.update()
+        self.raycasting.update()
+        self.object_handler.update()
         # 画面全体を更新
         pg.display.flip()
         self.delta_time = self.clock.tick(FPS)

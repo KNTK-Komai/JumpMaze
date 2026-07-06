@@ -1,3 +1,4 @@
+from main import Game
 from setting import *
 import pygame as pg
 import math
@@ -8,6 +9,20 @@ class Player:
         self.game = game
         self.x,self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
+        self.health = PLAYER_MAX_HEALTH
+
+    def check_game_over(self):
+        if self.health < 1:
+            text = pg.font.SysFont("Courier New", 70).render(
+                "GAME OVER", True, "RED")
+            self.game.screen.blit(text, text.get_rect(center=(50 * self.x, 50 * self.y - 15)))
+            pg.display.flip()
+            pg.time.delay(1500)
+            self.game.new_game()
+
+    def get_damage(self,damage):
+        self.health -= damage
+        self.check_game_over()
 
     def movement(self):
         sin_a = math.sin(self.angle)
@@ -54,10 +69,13 @@ class Player:
             self.y += dy
 
     def draw(self):
+        text = pg.font.SysFont("Courier New", 24).render(
+        f"{self.health}", True, "RED")
         pg.draw.line(self.game.screen,"yellow",(self.x*50,self.y*50),
                      (self.x*50 + WIDTH * math.cos(self.angle),
                             self.y*50 + WIDTH * math.sin(self.angle)),2)
         pg.draw.circle(self.game.screen,"green",(self.x*50,self.y*50),15)
+        self.game.screen.blit(text, text.get_rect(center=(50*self.x,50*self.y-15)))
 
     def update(self):
         self.movement()
